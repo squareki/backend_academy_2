@@ -1,0 +1,6 @@
+groups:
+  - name: theruleslebowski
+    rules:
+      - record: http_api_v1_avg_request_size
+        expr:
+          sum(prometheus_http_response_size_bytes_sum{handler=~"/api/v1/.*"}) / sum(prometheus_http_requests_total{handler=~"/api/v1/.*"})

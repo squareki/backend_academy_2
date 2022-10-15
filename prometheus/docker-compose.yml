@@ -1,0 +1,13 @@
+services:
+  prometheus-local:
+    build:
+      context: .
+      dockerfile: prom.dockerfile
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus-local:/prometheus
+
+volumes:
+  prometheus-local:

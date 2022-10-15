@@ -1,0 +1,3 @@
+# HELP node_host_machine_textfiles_collected Host Machine Textfiles Collected
+# TYPE node_host_machine_textfiles_collected gauge
+node_host_machine_textfiles_collected 3

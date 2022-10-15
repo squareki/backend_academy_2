@@ -1,0 +1,2 @@
+# TYPE node_host_machine_exporter_change_showcase gauge
+node_host_machine_exporter_change_showcase 1

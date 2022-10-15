@@ -1,0 +1,27 @@
+services:
+  node-exp-local:
+    build:
+      context: .
+      dockerfile: node.dockerfile
+    networks:
+      - prometheus_default
+    ports:
+      - "9100:9100"
+    volumes:
+      - prometheus_prometheus-local:/prometheus
+      - node-exp-local:/opt/prometheus_exporters
+      - ./node_textfile:/opt/prometheus_exporters
+    command:
+    - '--web.listen-address=0.0.0.0:9100'
+    - '--no-collector.netstat'
+    - '--collector.textfile.directory=/opt/prometheus_exporters'
+
+volumes:
+  prometheus_prometheus-local:
+    external: true
+  node-exp-local:
+ 
+networks:
+  prometheus_default:
+    name: prometheus_default
+    external: true
