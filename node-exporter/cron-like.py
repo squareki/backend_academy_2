@@ -3,12 +3,17 @@ import pathlib
 import re
 import subprocess
 from time import sleep
+from typing import Optional
 
-def get_win_ver() -> str:
+def get_win_ver() -> Optional[str]:
     output = subprocess.getoutput("ver")
     #print(output)
     search = re.search("Microsoft Windows \[Version ([\d.]+)\]", output)
-    version = search.group(1)
+    try:
+        version = search.group(1)
+    except AttributeError:
+        print("Not a Windows machine -- not generating windows info metric")
+        return None
     #print(version)
     filepath = pathlib.Path("./node_textfile/windows.prom")
     with open(filepath, "w", newline="") as f:
