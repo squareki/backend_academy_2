@@ -21,8 +21,9 @@ def get_win_ver() -> str:
 
 def get_prom_file_count() -> int:
     _, _, files = next(os.walk(pathlib.Path("./node_textfile")))
-    #print(files)
-    file_count = len(files)
+    print(files)
+    file_count = len([x for x in files if x.endswith(".prom")])
+    print(file_count)
     filepath = pathlib.Path("./node_textfile/textfile_collector.prom")
     with open(filepath, "w", newline="") as f:
         f.write("# HELP node_host_machine_textfiles_collected Host Machine Textfiles Collected\n")
