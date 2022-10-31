@@ -1,0 +1,23 @@
+services:
+  oncall-exp-local:
+    image: oncall-exp
+    # build:
+    #   context: .
+    networks:
+      - prometheus_default
+    ports:
+      - "9105:9105"
+    volumes:
+      - prometheus_prometheus-local:/prometheus
+      - oncall-exp-local:/opt/app/
+      - ./app:/opt/app
+
+volumes:
+  prometheus_prometheus-local:
+    external: true
+  oncall-exp-local:
+ 
+networks:
+  prometheus_default:
+    name: prometheus_default
+    external: true
