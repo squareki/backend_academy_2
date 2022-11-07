@@ -1,0 +1,53 @@
+filebeat.inputs:
+#- type: syslog
+#  format: auto
+#  protocol.udp:
+#    host: "localhost:5514"
+- type: filestream
+  id: oncall
+  paths:
+    - /var/log/oncall
+  processors:
+  - dissect:
+      tokenizer: '%{client.ip} - - [%{time}] "%{request.method} %{request.path} %{request.protocol}" %{response.status|integer} %{response.length} "%{response.host}" "%{request.useragent}"' 
+      field: "message"
+      target_prefix: ""
+
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+setup.template.settings:
+  index.number_of_shards: 1
+
+setup.template:
+  name: "syslog"
+  pattern: "syslog-*"
+
+setup.kibana:
+  host: "http://kibana:5601"
+
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
+  #protocol: "https"
+  #ssl.verification_mode: "none"
+  #index: "syslog-%{+yyyy.MM.dd}"
+  #username: "elastic"
+  #password: "changeme"
+
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~
+
+
+logging.level: debug
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat
+  keepfiles: 7
+  permissions: 0640
+

@@ -1,0 +1,44 @@
+version: '3.7'
+
+services:
+  filebeat:
+    privileged: true
+    user: root
+    image: elastic/filebeat:8.4.3
+    container_name: filebeat
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - KIBANA_HOST=http://kibana:5601
+      # - ELASTICSEARCH_USERNAME=elastic
+      # - ELASTICSEARCH_PASSWORD=changeme
+    configs:
+      - source: fb_config
+        target: /usr/share/filebeat/filebeat.yml
+    networks:
+      - elastic
+    volumes:
+      - filebeat-data:/usr/share/filebeat/data
+      # - /var/run/docker.sock:/var/run/docker/docker.sock
+      - oncall-logs:/var/log/:rw
+    # ports:
+    #  - 9200:9200
+    command: filebeat -e -strict.perms=false
+    deploy:
+        mode: global
+
+volumes:
+  filebeat-data:
+    driver: local
+  oncall-logs:
+    name: oncall-copy_oncall-logs
+    external: true
+
+networks:
+  elastic:
+    name: elastic_default
+    external: true
+    # driver: bridge
+
+configs:
+  fb_config:
+    file: ./filebeat.yml
