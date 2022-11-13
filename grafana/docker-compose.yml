@@ -1,0 +1,30 @@
+services:
+  grafana:
+    image: grafana/grafana-oss:9.2.4
+    # build:
+    #   context: .
+    configs:
+      - source: grafana_config
+        target: /etc/grafana/grafana.ini
+    networks:
+      - prometheus_default
+    ports:
+      - "3001:3001"
+    volumes:
+      # - prometheus_prometheus-local:/prometheus
+      - grafana:/etc/grafana
+      # - ./grafana:/etc/grafana
+
+volumes:
+  #prometheus_prometheus-local:
+  #  external: true
+  grafana:
+ 
+networks:
+  prometheus_default:
+    name: prometheus_default
+    external: true
+
+configs:
+  grafana_config:
+    file: ./grafana/grafana.ini
